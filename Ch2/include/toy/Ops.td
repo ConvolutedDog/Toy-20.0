@@ -105,32 +105,28 @@ def TestMLIROp : Toy_Op<"testmlir"> {
   }];
 
   
-  bit hasVerifier = 1;
+  bit hasVerifier = 0;
 
-  bit hasRegionVerifier = 1;
+  bit hasRegionVerifier = 0;
 
-  bit hasCanonicalizer = 1;
+  bit hasCanonicalizer = 0;
 
-  bit hasCanonicalizeMethod = 1;
+  bit hasCanonicalizeMethod = 0;
 
-  bit hasFolder = 1;
+  bit hasFolder = 0;
 
-  bit useCustomPropertiesEncoding = 1;
+  bit useCustomPropertiesEncoding = 0;
 
   list<Trait> traits = [Pure];
 
   code extraClassDeclaration = [{
-    namespace detail {
     class fuckMLIR;
-    }
   }];
 
   code extraClassDefinition = [{
-    namespace detail {
     class fuckMLIR {
       std::string fucker = "?";
     };
-    }
   }];
 }
 

@@ -35,6 +35,7 @@ message(STATUS "Using CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 option(BUILD_DEBUG "Build in debug mode" OFF)
 
 if(BUILD_DEBUG)
+  message(STATUS "Build in debug mode")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
@@ -62,7 +63,7 @@ include_directories(${MLIR_INCLUDE_DIRS})
 link_directories(${LLVM_BUILD_LIBRARY_DIR})
 add_definitions(${LLVM_DEFINITIONS})
 
-add_custom_target(Toy)
+add_custom_target(Toy ALL)
 
 include(${LLVM_DIR}/AddLLVM.cmake)
 
