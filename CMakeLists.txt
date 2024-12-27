@@ -10,6 +10,8 @@ add_compile_options (-w)
 
 set(CMAKE_BUILD_WITH_INSTALL_NAME_DIR ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS True)
+
 # Use command `cmake .. -DUSE_CLANG=ON` to enable Clang compiler.
 option(USE_CLANG "Use Clang compiler" OFF)
 
