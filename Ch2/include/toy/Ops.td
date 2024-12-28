@@ -30,9 +30,21 @@ def Toy_Dialect : Dialect {
 //   * The parent dialect of the operation.
 //   * The mnemonic for the operation, or the name without the dialect prefix.
 //   * A list of traits for the operation.
-class Toy_Op<string mnemonic, list<Trait> traits = []> :
-    Op<Toy_Dialect, mnemonic, traits>;
 
+// Old version:
+// class Toy_Op<string mnemonic, list<Trait> traits = []> :
+//     Op<Toy_Dialect, mnemonic, traits>;
+
+// New version:
+//   We can set default traits for the Toy_Op.
+class DefaultTraitsOp<string mnemonic, list<Trait> props = []> : 
+    Op<Toy_Dialect, mnemonic, props> {
+  list<Trait> defaultProps = [];
+  let traits = !listconcat(props, defaultProps);
+}
+
+class Toy_Op<string mnemonic, list<Trait> traits = []> :
+    DefaultTraitsOp<mnemonic, traits>;
 
 //===----------------------------------------------------------------------===//
 // TestMLIROp
