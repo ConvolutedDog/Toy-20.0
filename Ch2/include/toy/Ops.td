@@ -30,117 +30,8 @@ def Toy_Dialect : Dialect {
 //   * The parent dialect of the operation.
 //   * The mnemonic for the operation, or the name without the dialect prefix.
 //   * A list of traits for the operation.
-
-// Old version:
-// class Toy_Op<string mnemonic, list<Trait> traits = []> :
-//     Op<Toy_Dialect, mnemonic, traits>;
-
-// New version:
-//   We can set default traits for the Toy_Op.
-class DefaultTraitsOp<string mnemonic, list<Trait> props = []> : 
-    Op<Toy_Dialect, mnemonic, props> {
-  list<Trait> defaultProps = [];
-  let traits = !listconcat(props, defaultProps);
-}
-
 class Toy_Op<string mnemonic, list<Trait> traits = []> :
-    DefaultTraitsOp<mnemonic, traits>;
-
-//===----------------------------------------------------------------------===//
-// TestMLIROp
-//===----------------------------------------------------------------------===//
-
-// Decorates an attribute as optional. The return type of the generated
-// attribute accessor method will be Optional<>.
-class OptionalAttrX<Attr attr> : Attr<attr.predicate, attr.summary> {
-  // Rewrite the attribute to be optional.
-  // Note: this has to be kept up to date with Attr above.
-  let storageType = attr.storageType;
-  let returnType = "::std::optional<" # attr.returnType #">";
-  let convertFromStorage = "$_self ? " # returnType # "(" #
-                           attr.convertFromStorage # ") : (::std::nullopt)";
-  let valueType = attr.valueType;
-  // 这里设置为可选属性。
-  let isOptional = 1;
-
-  let baseAttr = attr;
-}
-
-def OptionalAnyI1AttrX : OptionalAttrX<AnyI1Attr>;
-
-class AnyIX<int width>
-    : Type<CPred<"$_self.isInteger(" # width # ")">, width # "-bit XXXXXXX integer"> {
-  int bitwidth = width;
-}
-def AnyI90 : AnyIX <90>;
-
-// include "mlir/IR/CommonAttrConstraints.td"
-def TestMLIROp : Toy_Op<"testmlir"> {
-  let summary = "TestMLIROp";
-  let description = [{
-    TestMLIROp
-  }];
-
-  let arguments = (ins F64Tensor:$lhs, F64Tensor:$rhs, AnyI90:$TMP);
-  let results = (outs F64Tensor:$res);
-
-  // Indicate that the operation has a custom parser and printer method.
-  let hasCustomAssemblyFormat = 1;
-
-  // Allow building an AddOp with from the two input operands.
-  let builders = [
-    OpBuilder<(ins "Value":$lhs, "Value":$rhs)>
-  ];
-  bit skipDefaultBuilders = 0;
-  
-  // Define the regions (then and else)
-  let regions = (region 
-    SizedRegion<1>:$thenRegion,
-    SizedRegion<2>:$elseRegion
-  );
-
-  // Define two successors
-  let successors = (successor
-    AnySuccessor:$trueDest,    // Branch target if condition is true
-    AnySuccessor:$falseDest    // Branch target if condition is false
-  );
-  
-  // Basic format: operands and type
-  let assemblyFormat = [{
-    $lhs `:` type($lhs) `,` $rhs `:` type($rhs) `,` $TMP `:` type($TMP)
-    attr-dict
-    `then` $thenRegion
-    `else` $elseRegion
-    `true` $trueDest
-    `false` $falseDest
-    `->` type($res)
-  }];
-
-  
-  bit hasVerifier = 0;
-
-  bit hasRegionVerifier = 0;
-
-  bit hasCanonicalizer = 0;
-
-  bit hasCanonicalizeMethod = 0;
-
-  bit hasFolder = 0;
-
-  bit useCustomPropertiesEncoding = 0;
-
-  list<Trait> traits = [Pure];
-
-  code extraClassDeclaration = [{
-    class fuckMLIR;
-  }];
-
-  code extraClassDefinition = [{
-    class fuckMLIR {
-      std::string fucker = "?";
-    };
-  }];
-}
+    Op<Toy_Dialect, mnemonic, traits>;
 
 //===----------------------------------------------------------------------===//
 // Toy Operations
@@ -169,15 +60,9 @@ def ConstantOp : Toy_Op<"constant", [Pure]> {
   }];
 
   // The constant operation takes an attribute as the only input.
-  // `F64ElementsAttr` corresponds to a 64-bit floating-point ElementsAttr.
-  // `F64ElementsAttr` only needs to ensure that the data is FP64 (64-bit
-  // floating point number). The specific data organization (such as the
-  // shape or dimension of the matrix) is flexible and can be determined
-  // as needed.
   let arguments = (ins F64ElementsAttr:$value);
 
   // The constant operation returns a single value of TensorType.
-  // Refer to `mlir/IR/CommonTypeConstraints.td`.
   let results = (outs F64Tensor);
 
   // Indicate that the operation has a custom parser and printer method.
@@ -185,7 +70,7 @@ def ConstantOp : Toy_Op<"constant", [Pure]> {
 
   // Add custom build methods for the constant operation. These method populates
   // the `state` that MLIR uses to create operations, i.e. these are used when
-  // using `builder.create<ConstantOp>(...)`.
+  // using `ConstantOp::create(builder, ...)`.
   let builders = [
     // Build a constant with a given constant tensor value.
     OpBuilder<(ins "DenseElementsAttr":$value), [{
@@ -412,7 +297,7 @@ def ReturnOp : Toy_Op<"return", [Pure, HasParent<"FuncOp">,
 
   // Allow building a ReturnOp with no return operand.
   let builders = [
-    OpBuilder<(ins), [{ build($_builder, $_state, std::nullopt); }]>
+    OpBuilder<(ins), [{ build($_builder, $_state, {}); }]>
   ];
 
   // Provide extra utility definitions on the c++ operation class definition.

@@ -1,0 +1,43 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        /*
+         * Configuration: Pure C++ Debugging.
+         * Purpose: Debug standalone C++ executables.
+         * Use: When testing C++ components without Python
+         * Note:
+         *   - Customize `"program"` entry to your C++ executable path.
+         */
+        {
+            "name": "Pure C++ Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            // Customize `"program"` entry to your C++ executable path.
+            "program": "${workspaceFolder}/build/bin/toyc-ch2",
+            "args": [
+                "-emit=mlir",
+                "-mlir-print-debuginfo",
+                "${workspaceFolder}/tests/Ch2/ast.toy"
+            ],
+            "stopAtEntry": true,
+            "sourceFileMap": {
+                "${workspaceFolder}/build": "${workspaceFolder}"
+            },
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+            "environment": [
+                {
+                    "name": "EXAMPLEKEY",
+                    "value": "EXAMPLEVALUE"
+                }
+            ]
+        },
+    ],
+}
