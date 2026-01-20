@@ -13,11 +13,9 @@
             "type": "cppdbg",
             "request": "launch",
             // Customize `"program"` entry to your C++ executable path.
-            "program": "${workspaceFolder}/build/bin/toyc-ch2",
+            "program": "${workspaceFolder}/build/bin/toyc-mytoy",
             "args": [
-                "-emit=mlir",
-                "-mlir-print-debuginfo",
-                "${workspaceFolder}/tests/Ch2/ast.toy"
+                "${workspaceFolder}/tests/Ch7/struct-ast.toy"
             ],
             "stopAtEntry": true,
             "sourceFileMap": {

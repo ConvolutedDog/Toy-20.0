@@ -5,7 +5,7 @@
     ],
     "clangd.enable": true,
     "clangd.inactiveRegions.useBackgroundHighlight": true,
-    "clangd.path": "/home/yangjianchao/Github/llvm-project-latest/build/bin/clangd",
+    "clangd.path": "/data2/yangjianchao/Github/llvm-project/build/bin/clangd",
     "mlir.tablegen_server_path": "/home/yangjianchao/Github/llvm-project-latest/build-mlir/bin/tblgen-lsp-server",
     "mlir.server_path": "/home/yangjianchao/Github/llvm-project-latest/build-mlir/bin/mlir-lsp-server",
     "mlir.pdll_server_path": "/home/yangjianchao/Github/llvm-project-latest/build-mlir/bin/mlir-pdll-lsp-server",
@@ -16,4 +16,5 @@
         "*.inc": "cpp",
     },
     "C_Cpp.intelliSenseEngine": "disabled",
+    "editor.fontSize": 14,
 }

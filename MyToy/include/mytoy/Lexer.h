@@ -28,6 +28,12 @@ public:
   int col;
 };
 
+
+class NullLocation : public Location {
+public:
+  NullLocation() : Location("", -1, -1) {}
+};
+
 enum Token {
   tok_eof = -1,
   tok_def = -2,
